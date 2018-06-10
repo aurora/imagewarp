@@ -64,11 +64,11 @@ void Scene::addImage(const String& filename, float p1x, float p1y, float p2x, fl
     img_points.push_back(Point2f(float(img.cols), float(0)));
 
     Mat H = findHomography(img_points, bg_points, 0);
-    Mat transformed_image;
+    Mat warped_image;
 
-    warpPerspective(img, transformed_image, H, bg_image.size());
+    warpPerspective(img, warped_image, H, bg_image.size());
 
-    applyLayer(transformed_image);
+    applyLayer(warped_image);
 }
 
 /**

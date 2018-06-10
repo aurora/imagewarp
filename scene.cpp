@@ -1,13 +1,19 @@
+/**
+ * Scene builder.
+ */
+
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/calib3d.hpp>
+#include <nlohmann/json.hpp>
 #include <iostream>
 #include <limits>
 #include <numeric>
 
 using namespace cv;
 using namespace std;
+using json = nlohmann::json;
 
 class Scene {
     public:
@@ -93,13 +99,33 @@ void Scene::writeScene(const String& filename)
 int main(int argc, char** argv)
 {
     if (argc < 4) {
-        cout << "usage: scene <bgimage> <insertimg> <outimage>";
+        cout << "usage: scene <scene-file> <output-image> <image-place1> [<image-place2> ...]";
         exit(1);
     }
 
-    Scene scene(argv[1]);
-    scene.addImage(argv[2], float(323), float(1120), float(323), float(1993), float(1491), float(1975), float(1491), float(1400));
-    scene.writeScene(argv[3]);
+    std::ifstream scene_file(argv[1]);
+    json j;
+    scene_file >> j;
+
+    Scene scene(j["background"].get<std::string>());
+
+    for (int i = 3; i < argc; ++i) {
+        if (strcmp(argv[i], "-") == 0) {
+            continue;
+        }
+
+        if (!j["places"][i - 3].empty()) {
+            scene.addImage(
+                argv[i],
+                j["places"][i - 3]["p1"]["x"].get<float>(), j["places"][i - 3]["p1"]["y"].get<float>(),
+                j["places"][i - 3]["p2"]["x"].get<float>(), j["places"][i - 3]["p2"]["y"].get<float>(),
+                j["places"][i - 3]["p3"]["x"].get<float>(), j["places"][i - 3]["p3"]["y"].get<float>(),
+                j["places"][i - 3]["p4"]["x"].get<float>(), j["places"][i - 3]["p4"]["y"].get<float>()
+            );
+        }
+    }
+
+    scene.writeScene(argv[2]);
 
     return 0;
 }

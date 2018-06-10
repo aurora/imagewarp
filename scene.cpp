@@ -99,8 +99,15 @@ void Scene::writeScene(const String& filename)
 int main(int argc, char** argv)
 {
     if (argc < 4) {
-        cout << "usage: scene <scene-file> <output-image> <image-place1> [<image-place2> ...]";
-        exit(1);
+        cout << "usage: scene <scene-file> <output-file> <place1-file>\n";
+        cout << "             [<place2-file> ...]\n";
+        cout << "\n";
+        cout << "The scene-file needs to be a valid json scene configuration file. All other\n";
+        cout << "files are image files. To omit a place specify '-' as place filename.\n";
+        cout << "Take care: existing output files will be overwritten without warning!\n";
+        cout << "\n";
+
+        return 1;
     }
 
     std::ifstream scene_file(argv[1]);

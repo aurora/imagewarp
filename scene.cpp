@@ -24,6 +24,7 @@ class Scene {
     private:
         Mat bg_image;
         Mat fg_image;
+        bool has_foreground = false;
         void applyLayer(Mat layer_image);
 };
 
@@ -41,6 +42,7 @@ Scene::Scene(const String& filename)
 void Scene::setForeground(const String& filename)
 {
     fg_image = imread(filename, IMREAD_COLOR);
+    has_foreground = true;
 }
 
 /**
@@ -93,6 +95,10 @@ void Scene::applyLayer(Mat layer_image)
  */
 void Scene::writeScene(const String& filename)
 {
+    if (has_foreground) {
+        applyLayer(fg_image);
+    }
+
     imwrite(filename, bg_image);
 }
 
@@ -121,6 +127,10 @@ int main(int argc, char** argv)
     }
 
     Scene scene(j["background"].get<std::string>());
+
+    if (j["foreground"].empty()) {
+        scene.setForeground(j["foreground"].get<std::string>());
+    }
 
     for (int i = 3; i < argc; ++i) {
         if (strcmp(argv[i], "-") == 0) {

@@ -114,6 +114,12 @@ int main(int argc, char** argv)
     json j;
     scene_file >> j;
 
+    if (j["background"].empty()) {
+        cout << "You specified a scene-file, that does not contain a background image.\n";
+
+        return 1;
+    }
+
     Scene scene(j["background"].get<std::string>());
 
     for (int i = 3; i < argc; ++i) {

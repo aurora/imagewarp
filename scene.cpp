@@ -128,7 +128,7 @@ int main(int argc, char** argv)
 
     Scene scene(j["background"].get<std::string>());
 
-    if (j["foreground"].empty()) {
+    if (!j["foreground"].empty()) {
         scene.setForeground(j["foreground"].get<std::string>());
     }
 

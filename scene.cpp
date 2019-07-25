@@ -1,5 +1,8 @@
 /**
  * Scene builder.
+ *
+ * @copyright   copyright (c) 2018-present by Harald Lapp
+ * @author      Harald Lapp <harald.lapp@gmail.com>
  */
 
 #include <opencv2/core.hpp>

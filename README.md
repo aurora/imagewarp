@@ -1,8 +1,6 @@
-# perspective
+# scene
 
-Perspective projection of images.
-
-Example images: A15374911, A21192638, A43295079
+Perspective projection of images. Supports background and foreground layers, eg. to mount photos into room scenes etc.
 
 ## Requirements
 

@@ -4,5 +4,9 @@ Perspective projection of images. Supports background and foreground layers, eg.
 
 ## Requirements
 
-* https://opencv.org/ -- opencv 3.x
+* https://xmake.io/ 
+
+## Libraries used
+
+* https://opencv.org/ -- opencv 4.2
 * https://github.com/nlohmann/json

@@ -1,1 +1,10 @@
-/scene
+# Xmake cache
+.xmake/
+build/
+
+# MacOS Cache
+.DS_Store
+
+
+/.idea
+/scene.iml

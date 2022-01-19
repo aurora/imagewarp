@@ -11,6 +11,7 @@
 #include <opencv2/calib3d.hpp>
 #include <nlohmann/json.hpp>
 #include <iostream>
+#include <fstream>
 #include <limits>
 #include <numeric>
 
@@ -83,8 +84,8 @@ void Scene::applyLayer(Mat layer_image)
 {
     Mat gray, gray_inv, layer1_image, layer2_image;
 
-    cvtColor(layer_image, gray, CV_BGR2GRAY);
-    threshold(gray, gray, 0, 255, CV_THRESH_BINARY);
+    cvtColor(layer_image, gray, COLOR_BGR2RGB);
+    threshold(gray, gray, 0, 255, THRESH_BINARY);
     bitwise_not(gray, gray_inv);
 
     bg_image.copyTo(layer1_image, gray_inv);

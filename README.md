@@ -1,4 +1,4 @@
-# scene
+# Imagewarp
 
 Perspective projection of images. Supports background and foreground layers, eg. to mount photos into room scenes etc.
 

@@ -1,8 +1,8 @@
 /**
- * Scene builder.
+ * Imagewarp.
  *
  * @copyright   copyright (c) 2018-present by Harald Lapp
- * @author      Harald Lapp <harald.lapp@gmail.com>
+ * @author      Harald Lapp <harald@octris.org>
  */
 
 #include <opencv2/core.hpp>
@@ -19,12 +19,12 @@ using namespace cv;
 using namespace std;
 using json = nlohmann::json;
 
-class Scene {
+class ImageWarp {
     public:
-        Scene(const String& filename);
+        ImageWarp(const String& filename);
         void setForeground(const String& filename);
         void addImage(const String& filename, float p1x, float p1y, float p2x, float p2y, float p3x, float p3y, float p4x, float p4y);
-        void writeScene(const String& filename);
+        void save(const String& filename);
     private:
         Mat bg_image;
         Mat fg_image;
@@ -35,7 +35,7 @@ class Scene {
 /**
  * Constructor defines background image of the scene.
  */
-Scene::Scene(const String& filename)
+ImageWarp::ImageWarp(const String& filename)
 {
     bg_image = imread(filename, IMREAD_COLOR);
 }
@@ -43,7 +43,7 @@ Scene::Scene(const String& filename)
 /**
  * Set the foreground image of the scene.
  */
-void Scene::setForeground(const String& filename)
+void ImageWarp::setForeground(const String& filename)
 {
     fg_image = imread(filename, IMREAD_COLOR);
     has_foreground = true;
@@ -52,7 +52,7 @@ void Scene::setForeground(const String& filename)
 /**
  * Add image to the scene at specified points.
  */
-void Scene::addImage(const String& filename, float p1x, float p1y, float p2x, float p2y, float p3x, float p3y, float p4x, float p4y)
+void ImageWarp::addImage(const String& filename, float p1x, float p1y, float p2x, float p2y, float p3x, float p3y, float p4x, float p4y)
 {
     vector<Point2f> bg_points;
     vector<Point2f> img_points;
@@ -80,7 +80,7 @@ void Scene::addImage(const String& filename, float p1x, float p1y, float p2x, fl
 /**
  * Merge image to background image.
  */
-void Scene::applyLayer(Mat layer_image)
+void ImageWarp::applyLayer(Mat layer_image)
 {
     Mat gray, gray_inv, layer1_image, layer2_image;
 
@@ -95,9 +95,9 @@ void Scene::applyLayer(Mat layer_image)
 }
 
 /**
- * Write scene to file.
+ * Save created image into file.
  */
-void Scene::writeScene(const String& filename)
+void ImageWarp::save(const String& filename)
 {
     if (has_foreground) {
         applyLayer(fg_image);
@@ -109,10 +109,10 @@ void Scene::writeScene(const String& filename)
 int main(int argc, char** argv)
 {
     if (argc < 4) {
-        cout << "usage: scene <scene-file> <output-file> <place1-file>\n";
+        cout << "usage: imagewarp <scene-file> <output-file> <place1-file>\n";
         cout << "             [<place2-file> ...]\n";
         cout << "\n";
-        cout << "The scene-file needs to be a valid json scene configuration file. All other\n";
+        cout << "The scene-file needs to be a valid json configuration file. All other\n";
         cout << "files are image files. To omit a place specify '-' as place filename.\n";
         cout << "Take care: existing output files will be overwritten without warning!\n";
         cout << "\n";
@@ -130,10 +130,10 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    Scene scene(j["background"].get<std::string>());
+    ImageWarp ImageWarp(j["background"].get<std::string>());
 
     if (!j["foreground"].empty()) {
-        scene.setForeground(j["foreground"].get<std::string>());
+        ImageWarp.setForeground(j["foreground"].get<std::string>());
     }
 
     for (int i = 3; i < argc; ++i) {
@@ -142,7 +142,7 @@ int main(int argc, char** argv)
         }
 
         if (!j["places"][i - 3].empty()) {
-            scene.addImage(
+            ImageWarp.addImage(
                 argv[i],
                 j["places"][i - 3]["p1"]["x"].get<float>(), j["places"][i - 3]["p1"]["y"].get<float>(),
                 j["places"][i - 3]["p2"]["x"].get<float>(), j["places"][i - 3]["p2"]["y"].get<float>(),
@@ -152,7 +152,7 @@ int main(int argc, char** argv)
         }
     }
 
-    scene.writeScene(argv[2]);
+    ImageWarp.save(argv[2]);
 
     return 0;
 }

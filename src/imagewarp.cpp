@@ -130,15 +130,33 @@ int main(int argc, char** argv)
         return 1;
     }
 
+    if (!haveImageReader(j["background"].get<std::string>())) {
+        cout << "The specified background image cannot be read.\n";
+
+        return 1;
+    }
+
     ImageWarp ImageWarp(j["background"].get<std::string>());
 
     if (!j["foreground"].empty()) {
+        if (!haveImageReader(j["foreground"].get<std::string>())) {
+            cout << "The specified foreground image cannot be read.\n";
+
+            return 1
+        }
+
         ImageWarp.setForeground(j["foreground"].get<std::string>());
     }
 
     for (int i = 3; i < argc; ++i) {
         if (strcmp(argv[i], "-") == 0) {
             continue;
+        }
+
+        if (!haveImageReader(argv[i])) {
+            cout << "The specified image cannot be read " << argv[i] << ".\n";
+
+            return 1;
         }
 
         if (!j["places"][i - 3].empty()) {

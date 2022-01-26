@@ -142,7 +142,7 @@ int main(int argc, char** argv)
         if (!haveImageReader(j["foreground"].get<std::string>())) {
             cout << "The specified foreground image cannot be read.\n";
 
-            return 1
+            return 1;
         }
 
         ImageWarp.setForeground(j["foreground"].get<std::string>());

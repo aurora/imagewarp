@@ -2,9 +2,10 @@
 
 Perspective projection of images. Supports background and foreground layers, eg. to mount photos into room scenes etc.
 
-## Requirements
+## Build requirements
 
-* https://xmake.io/ 
+* https://xmake.io/
+* https://conan.io/
 
 ## Libraries used
 
